@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Welcome Innovation Camp</title>
+  <script src="/Public/third party/jquery/jquery-2.1.4.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="/Public/third party/jquery/jquery-2.1.4.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="/Public/third party/jquery-dataTables-1.10.7/js/jquery.dataTables.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/Public/third party/jquery-dataTables-1.10.7/css/jquery.dataTables.min.css">
+  <script src="/Public/third party/bootstrap/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css"href="/Public/third party/bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/Public/third party/bootstrap-fileinput-master/css/fileinput.min.css">
+  <link rel="stylesheet" href="/Public/third party/raty-2.7.0/lib/jquery.raty.css">
+  <link rel="stylesheet" type="text/css"href="/Public/style.css" />
+  <script>
+    $(document).ready( function () {
+  	  $('#table-id').dataTable({
+        stateSave: true,
+  		  searching: true,
+  	    "dom": '<"top">lirft<"bottom"ip><"clear">',
+  	    "aaSorting": [[7,'desc']],
+        "aLengthMenu": [[10, 25, 50,100, -1], [10, 25,50,100, "All"]],
+        // "aoColumnDefs": [{"sType":"numeric", "aTargets":['favorite-count'] }]
+        "columnDefs": [{"orderData": 3, "targets":[2] }]
+  	  });
+  	 
+    });
+    $(document).ready(function(){
+      $('#tableheader div p').each( function () {
+        $(this).html( '<select  class="statusfilter form-control">'+
+                      '<option selected>Status Filter</option>'+
+                      '<option>Idea</option>'+
+                      '<option>Egg</option>'+
+                      '<option>Eaglet</option>'+
+                      '<option>Eagle</option></select>' );
+      });
+      var table = $('#table-id').DataTable();
+
+      $("#tableheader div select").on( ' change', function () {
+      	if (this.value=="Status Filter"){
+      		 this.value="";
+      		 location.reload();
+      	}
+        table
+          .column( 0 +':visible' )
+          .search( this.value)
+          .draw();
+      });
+  		if(({$Think.session.isFirstIn}) == 1 ){
+  		  $('#statussummary').modal('show');
+      };
+    });
+  </script>
+</head>
+
+<body>
+	<include file="./Public/header.html" />
+	<div class="container" >
+	<div class="row div-row" style="padding:10px;" id="tableheader">
+		<div class="col-sm-3 titlefont-main">
+		 	<eq name="isAdvisor" value="true">Welcome, advisor!<br/><else/></eq>
+      <eq name="isAdmin" value="true">Welcome, admin!<br/><else/></eq>
+		 		Here are Brilliant Innovation Ideas!
+	  </div>
+		<div class="col-sm-2">
+			<eq name="showfavoriteonly" value="1">
+				<input type="checkbox" id="followed-project" checked="checked" />
+			<else/>
+				<input type="checkbox" id="followed-project" />
+			</eq>
+      <label for="followed-project" class="titlefont-main">Show my followings</label>
+		</div>
+		<div class="col-sm-2">
+			<p>status filter</p>
+		</div>
+	  <div class="col-sm-2">
+			<button class="btn btn-primary new-project" type="button"
+				onclick="{location.href='/Home/Project/newprojectpage.html'}" title="I Want to Share New Idea/Challenge">Create New Idea/Challenge</button>
+		</div>
+    <div class="col-sm-1.5"  style="margin-top:10px;text-align:center;">
+      <a role="button" href="#showadvisors" data-toggle="modal" style="color:blue;font-weight:bold;">Who are advisors?</a>
+    </div>
+     <div class="col-sm-1.5"  style="margin-top:10px;text-align:center;">
+      <a role="button" href="/Home/User/shownew" targrt="_blank"  style="color:blue;font-weight:bold;">Incubator Timeline</a>
+    </div>
+
+	 </div>
+   <table class="table project-list-table display col-sm-12" id="table-id" style="-webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+           user-select: none;">
+	<thead>
+		<tr>
+			<th data-align="right" style="visibility:hidden;display:none;">StatusFilter</th>
+			<th data-align="right"> Average Score</th>
+		<!-- 	<th data-align="right" style="visibility:hidden;display:none;">Sun</th> -->
+			<th data-align="right">Followings</th>
+      <th data-align="right" style="visibility:hidden;display:none;">FollowingNum</th>
+    	<th data-align="right">Short Description</th>
+    	<th data-align="right">Owner</th>
+    	<th data-align="right">Status</th>
+    	<th data-align="right">Created Date</th>
+    	<th data-align="right">Updated Date</th>
+    	<th data-align="right">Tags</th>
+ 		</tr>
+ 	</thead>
+  <tbody>
+	  <foreach name='projectlist' item='vo'>
+		  <tr>
+			  <td style="visibility:hidden;display:none;">{$vo.status}</td>
+			  <td class="col-md-1" style="text-align: center;marigin:auto auto;">
+          <div class="medal-on"></div>
+				  {$vo.adminaveragescore}
+			  </td>
+			  <td  class="edit-favorite col-md-0.5">
+				  <eq name="vo.isFavorite" value="true">
+				  	<div class="heart-on tip"><span><p>Click into the project and follow it !</p></span></div>
+				  <else/>
+					  <div class="heart-off tip"><span><p>Click into the project and follow it !</p></span></div>
+				  </eq>
+				  <div class ="favorite-count" style="text-align: center;">{$vo.favoritecount}</div>
+			  </td>
+        <td style="visibility:hidden;display:none;">{$vo.favoritecount}</td>
+  		  <td  class="col-md-3"><a href="{:U('Project/dashboard','id='.$vo['id'])}">{$vo.title}</a></td>
+  	  	<td  class="col-md-2"><img class="row-img" src={$vo.photolink} alt="no photo" /><a href={$vo.ldaplink}>{$vo.ownername}</a></td>
+  		  <td  class="col-md-1">
+	        <div class="prjstatus">
+					  <eq name="isAdmin" value="true">
+	    		    <select  class="status form-control" name="status" id="status">
+	    				  <option selected disabled>{$vo.status}</option>
+                <option value ="Idea">Idea</option>
+                <option value ="Egg">Egg</option>
+                <option value="Eaglet">Eaglet</option>
+                <option value="Eagle">Eagle</option>
+	            </select>
+	            <p class="project-Id" style="visibility:hidden;display:none;">{$vo.id} </p>
+	          <else/>
+              <eq name="isAdvisor" value="true">
+                <select  class="status form-control" name="status" id="status">
+                  <option selected disabled>{$vo.status}</option>
+                  <option value ="Idea">Idea</option>
+                  <option value ="Egg">Egg</option>
+                  <option value="Eaglet">Eaglet</option>
+                  <option value="Eagle">Eagle</option>
+                </select>
+                <p class="project-Id" style="visibility:hidden;display:none;">{$vo.id} </p>
+              <else/>
+                <div>{$vo.status}</div>
+              </eq>
+					  </eq>
+				  </div>
+        </td>
+      	<td  class="col-md-1">{$vo.createddate}</td>
+    	  <td  class="col-md-1 update-date">{$vo.updateddate}</td>
+      	<td class="col-md-2">
+  		  	<foreach name="vo.tags" item="tag">
+  			  	<div class="tag">{$tag.tagname}</div>
+  			  </foreach>
+        </td>
+		  </tr>
+	  </foreach>
+  </tbody>
+  </table>
+</div>
+
+<div class="modal fade" id="statussummary"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" style="margin-top:15%;">
+  <div class="modal-dialog modal-lg" style="width:1000px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title status-head" style="font-size: 35px;">Status Summary</h4>
+      </div>
+      <div class="modal-body ex-modal-body" >
+				<div class="statusIcon col-sm-3" style="border-left: none;">
+					<b  class="status-head" >Idea</b><br/>
+					<div class="row ex-row" >
+						<div class="col-sm-6 nopadding" >
+	      			<b class="status-number">{$ideacount}</b>
+					  </div>
+						<div class="col-sm-6 nopadding">
+							<img  id="ideaicon" title="only see the Idea"src="/Public/image/Idea.png" />
+						</div>
+					</div>
+		   	</div>
+				<div class="statusIcon col-sm-3">
+					<b class="status-head">Egg</b><br/>
+					<div class="row ex-row">
+						<div class="col-sm-6 nopadding" >
+	      			<b class="status-number status-center" >{$eggcount}</b>
+					  </div>
+						<div class="col-sm-6 nopadding">
+							<img  id="eggicon" title="only see the Egg" src="/Public/image/Egg.png" />
+						</div>
+					</div>
+		   	</div>
+				<div class="statusIcon col-sm-3">
+					<b class="status-head">Eaglet</b><br/>
+					<div class="row ex-row">
+						<div class="col-sm-6 nopadding" >
+							<b class="status-number status-center">{$eagletcount}</b>
+						</div>
+						<div class="col-sm-6 nopadding">
+							<img id="eagleticon" title="only see the Eaglet" src="/Public/image/Eaglet.png" />
+						</div>
+					</div>
+				</div>
+				<div class="statusIcon col-sm-3">
+					<b class="status-head">Eagle</b><br/>
+					<div class="row ex-row" >
+						<div class="col-sm-6 nopadding" >
+							<b class="status-number status-center">{$eaglecount}</b>
+						</div>
+						<div class="col-sm-6 nopadding">
+							<img id="eagleicon" title="only see the Eagle" src="/Public/image/Eagle.png" />
+						</div>
+					</div>
+				</div>
+      </div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="showadvisors"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" style="font-size: 25px;">Advisors</h4>
+      </div>
+      <div class="modal-body" style="overflow: auto">
+        <foreach name='advisorlist' item='vo'>
+          <div class="advisors" style=" float: left; margin-right: 50px;">
+            <img src={$vo.photolink} alt="no photo" />
+            <div><a href={$vo.ldaplink}>{$vo.username}</a></div>
+          </div>
+        </foreach>
+      </div>
+    </div>
+  </div>
+</div>
+<include file="./Public/foot.html" />
+<script>
+ $(document).ready(function(){
+   $('#ideaicon').click(function(){
+     $('#tableheader div select').val("Idea");
+     var table = $('#table-id').DataTable();
+     table.column( 0 +':visible' ).search( 'Idea').draw();
+     $('#statussummary').modal('hide');
+   });
+   $('#eggicon').click(function(){
+     $('#tableheader div select').val("Egg");
+     var table = $('#table-id').DataTable();
+     table.column( 0 +':visible' ).search( 'Egg').draw();
+     $('#statussummary').modal('hide');
+   });
+   $('#eagleticon').click(function(){
+     $('#tableheader div select').val("Eaglet");
+     var table = $('#table-id').DataTable();
+     table.column( 0 +':visible' ).search( 'Eaglet').draw();
+     $('#statussummary').modal('hide');
+   });
+   $('#eagleicon').click(function(){
+     $('#tableheader div select').val("Eagle");
+     var table = $('#table-id').DataTable();
+     table.column( 0 +':visible' ).search( 'Eagle').draw();
+     $('#statussummary').modal('hide');
+   });
+ })
+</script>
+<script type="text/javascript">
+ $(document).ready(function(){
+	// $('select').change(function () {
+	$('#table-id').on('change','select',function(){
+    if(confirm('confirm to change the status? \n System will send notification mails to all the advisors and team members!'))
+    {
+      var optionSelected = $(this).find("option:selected");
+	    var status  = optionSelected.val();
+	    var projectId = $(this).parent().children("p.project-Id").text();
+	    var url = '/Home/Project/editStatus/';
+	    var updateCell = $(this).parents('tr').find('td:eq(7)');
+		  $.post(url, {status:status, projectId:projectId}, function(data){
+				if(data.errno !== 0 && data.errno !== 1)
+				{
+					 exit(data.errmsg);
+				}
+				updateCell.text(date.toDateString());
+			},'json');
+    }
+    else{
+      location.reload();
+    }
+    return false;
+	 });
+ });
+
+ $(document).ready(function(){
+	$('#followed-project').on('click', function(){
+		var isChecked = $(this).prop('checked');
+		var showFavoriteOnly = 0;
+		if(isChecked === true)
+		{
+			showFavoriteOnly = 1;
+		}
+		location.href = '/Home/Project/index/showFavoriteOnly/'+showFavoriteOnly;
+	 });
+ });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Login</title>
+  <link href="/Public/third party/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="/Public/style.css" rel="stylesheet" />
+  <script src="/Public/third party/jquery/jquery-2.1.4.min.js"></script>
+  <script src="/Public/third party/bootstrap/js/bootstrap.min.js"></script>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-66340947-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+  <script>
+    function InputCheck(LoginForm)
+    {
+      if (LoginForm.username.value == "")
+      {
+        document.getElementById("login-warning").innerHTML = "Please input alias!";
+        LoginForm.username.focus();
+        return (false);
+      }
+      if (LoginForm.password.value == "")
+      {
+  	     document.getElementById("login-warning").innerHTML = "Please input password!";
+         LoginForm.password.focus();
+         return (false);
+       }
+     }
+     $(document).ready(function(){
+
+     $("#ip-checked").on("click", function(){
+  	    var isChecked = $(this).prop('checked');
+  	    $("#login-btn").prop("disabled", !isChecked);
+      });
+    })
+ </script>
+</head>
+
+<body class="loginpage" style="overflow-x:hidden;">
+  <div id="login-title">
+    <h1 id="login-title-text">I am an Innovator!</h1>
+    <h2 id="login-subline-text">BGC Innovation Incubator</h2>
+  </div>
+  <form class="form-horizontal loginform col-sm-3" name="LoginForm" method="post" action="{:U('User/login')}" onSubmit="return InputCheck(this)">
+  	<div class="form-group">
+    	<div class="logindescriptionfont "> Discover...	</div>
+      <div>
+    		<div class="warning" id="login-warning">{$warning}</div>
+     	</div>
+    </div>
+  	<div class="form-group">
+  		<div class="col-sm-12">
+  			<input id="username" class="loginmodule input" name="username" type="text" placeholder="LDAP Alias"/>
+  		</div>
+  	</div>
+  	<div class="form-group">
+  		<div class="col-sm-12">
+  			<input id="password" name="password" class="loginmodule input" type="password"  placeholder="Password"/>
+  		</div>
+  	</div>
+  	<div class = "form-group">
+    	<div class="row">
+    	 	<input class="col-sm-1" type="checkbox" id="ip-checked"/>
+    	 	<div class="col-sm-11 " style="font-size:1.2em;margin-left:-0.5em;">
+    	 	<strong> Warning:</strong>
+    	 	Please note that all the contents in this website shall be classified as Schlumberger Confidential, and any leakage of the contents may cause severe damage to Schlumberger. Therefore,
+    	  <strong>you are authorized to use them only inside Schlumberger, and have no right to show or expose them to any external personnel.
+    	 	</strong>
+    	 	</div>
+    	</div>
+  	</div>
+  	<div class="form-group">
+     	<div class="col-sm-12">
+  		  <input type="submit" id="login-btn" name="submit" value=" Login  " class="loginmodule btn-primary" disabled/>
+   	  </div>
+      <div class="col-sm-12 show-btn " style="margin-top:-10px; margin-left: 200px;">
+  		  <a href="/Home/User/shownew" targrt="_blank"><h3>Incubator Timeline</h3></a>
+   	  </div>
+    </div>
+  </form>
+  <footer style="font-size:1.2em; color:white;align-content:center; position:relative; bottom:-95%;">
+  	<strong style="padding-left:10em">Copyright @ 2015 BGC, Schlumberger. All rights reserved.</strong>
+  </footer>
+ </body>
+</html>

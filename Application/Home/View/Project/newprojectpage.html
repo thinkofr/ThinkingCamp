@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>Share New Innovation Idea</title>
+	<link href="/Public/third party/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/Public/style.css">
+	<script src="/Public/third party/jquery/jquery-2.1.4.min.js"></script>
+	<link rel="stylesheet" href="/Public/third party/raty-2.7.0/lib/jquery.raty.css">
+	<script  src="/Public/third party/raty-2.7.0/lib/jquery.raty.js"></script>
+	<script src="/Public/third party/bootstrap/js/bootstrap.min.js"></script>
+	<script>
+		function InputCheck(NewIdeaForm) {
+			if (NewIdeaForm.title.value == "" || NewIdeaForm.background.value =="" || NewIdeaForm.tags.value =="") {
+				document.getElementById("warning").innerHTML = "Please input short description and challenge or background or tags.";
+				NewIdeaForm.title.focus();
+				return (false);
+			}
+		};
+		$.fn.raty.defaults.path = '/../../../Public/third party/raty-2.7.0/lib/images';
+		$(document).ready(function(){
+			$('#challengescore').raty({
+				hints: ['1', '2', '3', '4', '5'],
+				width:150,
+				cancel:true,
+				target: '#challengeresult',
+	      targetKeep : true
+			});
+		});
+		$(document).ready(function(){
+			$('#solutionscore').raty({
+				hints: ['1', '2', '3', '4', '5'],
+				width:150,
+				cancel:true,
+				target: '#solutionresult',
+	      targetKeep : true
+			});
+		});
+		$(document).ready(function(){
+			$('#benefitscore').raty({
+				hints: ['1', '2', '3', '4', '5'],
+				width:150,
+				cancel:true,
+				target: '#benefitresult',
+	      targetKeep : true
+			});
+		});
+	</script>
+</head>
+<body>
+	<include file="./Public/header.html"/>
+	<div class="container">
+		<h2 class="titlefont">Please share your new idea / challenge info </h2>
+		<form class="form col-sm-9" method="post" style="padding:5% 10%;" enctype="multipart/form-data" action="{:U('Project/publishnewidea')}" onSubmit="return InputCheck(this)">
+			<div class="form-group">
+				<div class="col-sm-offset-3 col-sm-9 warning" id="warning"></div>
+			</div>
+			<div class="row form-group">
+				<label class="col-sm-3 control-label lablefont" for="inputTitle">Give a short description of your issue/idea.</label>
+				<div class="col-sm-8">
+					<input type="text" id="inputTitle" class="newideainput" name="title" />
+				</div>
+				<div style="color:red; padding-top:25px;">*</div>
+			</div>
+			<!-- TAGS would be added by advisor! -->
+			<!-- <div class="row form-group">
+				<label class="col-sm-3 control-label lablefont" for="tags-input">Tags</label>
+				<div class="col-sm-8">
+					<input type="text" id="tags-input" class="newideainput" name="tags" /></br>
+					<span class="warning">Note:separate each tag by semicolon, e.g. PHP;JavaScript</span>
+				</div>
+				<div style="color:red; padding-top:25px;">*</div>
+			</div> -->
+			<div class="row form-group">
+				<label class="col-sm-3 control-label lablefont" for="inputBackground">What is the challenge/issue/background?</label>
+				<div class="col-sm-8">
+					<div class="column">
+						<div id="challengescore"  style="margin-left:20px;margin-bottom:5px;"></div>
+						<input id="challengeresult" name="maturityscore" style="visibility:hidden;display:none;"></input>
+						<span style="color:grey; margin-left:25px;">Please give your self-rating Innovation Factor.</span>
+						<textarea id="inputBackground"  class="newideatextarea" name="background"></textarea>
+					</div>
+				</div>
+			  <div style="color:red; padding-top:25px">*</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-sm-3 control-label lablefont" for="inputIdea">Have you already got any solution? if yes, describe it here.</label>
+				<div class="col-sm-8">
+					<div class="column">
+						<div id="solutionscore" style="margin-left:20px;margin-bottom:5px;"></div>
+						<input id="solutionresult" name="innovationscore" style="visibility:hidden;display:none;"></input>
+						<span style="color:grey; margin-left:25px;">Please give your self-rating Solution Maturity.</span>
+						<textarea class="newideatextarea" id="inputIdea" name="idea"></textarea>
+					</div>
+		   	</div>
+			  <div style="color:red; padding-top:25px">*</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-sm-3 control-label lablefont" for="inputSlogan">Give one slogan for your project.</label>
+				<div class="col-sm-8">
+					<input type="text" id="inputSlogan" class="newideainput" name="slogan" />
+				</div>
+			</div>
+			<div class="row">
+				<label class="col-sm-3 control-label lablefont" for="inputTarget">What is the benefit it brings?</label>
+				<div class="col-sm-8">
+					<div id="benefitscore" style="margin-left:20px;margin-bottom:5px;"></div>
+					<input id="benefitresult" name="businessscore" style="visibility:hidden;display:none;"></input>
+					<span style="color:grey; margin-left:25px;">Please give your self-rating Business Value.</span>
+					<textarea id="inputTarget" class="newideatextarea" 	name="benefit">	</textarea>
+				</div>
+			  <div style="color:red; padding-top:25px">*</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-sm-3 control-label lablefont" for="inputAttachFile">Attach File:</label>
+				<div class="col-sm-8">
+					<input class="col-sm-8"  type="file" name="attachfile[]" id="files" multiple style="width:100%;font-size:20px;"/><br/>
+					<span class="warning">Note: You can ONLY UPLOAD 3 FILES!</br>Support: 'zipx', 'zip', 'doc', 'docx','ppt','pptx','txt', 'jpg', 'jpeg','gif','png', 'pdf','xlsx', '.xls'</span>
+					</br>
+					<pre id="filelist" style="display:none;width: 650px;"></pre>
+				</div>
+			</div>
+			<div class="row form-group col-sm-offset-3 ">
+				<input  class="col-sm-3 button create-new-button" type="submit" name="submit" value="Share" id="sharebutton"  style="margin-left:0;" />
+				<button class="col-sm-3 button create-new-button" type="button" onclick="history.go(-1);return true;">Cancel</button>
+			</div>
+		</form>
+	</div>
+	<include file="./Public/foot.html" />
+	<script>
+		document.getElementById('files').addEventListener('change', function(e) {
+	    var list = document.getElementById('filelist');
+	    list.innerHTML = '';
+	    for (var i=0;i<this.files.length;i++) {
+	      list.innerHTML +='&nbsp'+ (i+1) + '. ' + this.files[i].name + '\n';
+	    }
+			document.getElementById('sharebutton').removeAttribute("disabled");
+	    if(this.files.length>3){
+	    	alert("You can only upload 3 files!");
+	    	list.style.display = 'none';
+	    	document.getElementById('sharebutton').setAttribute("disabled","disabled");
+	    	return;
+ 			};
+	    if (list.innerHTML == '') list.style.display = 'none';
+	    else list.style.display = 'block';
+	});
+	</script>
+ </body>
+</html>

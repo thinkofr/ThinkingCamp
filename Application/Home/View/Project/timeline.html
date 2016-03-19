@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<meta http-equiv=”X-UA-Compatible” content=”IE=edge,chrome=1″ />
+<title>Discuss Area</title>
+<link rel="stylesheet" href="/Public/third party/timeliner/inc/colorbox.css" type="text/css" >
+<script src="/Public/third party/jquery/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="/Public/third party/timeliner/js/timeliner.js"></script>
+<script type="text/javascript" src="/Public/third party/timeliner/js/vendor/venobox/venobox.min.js"></script>
+
+<link rel="stylesheet" href="/Public/third party/timeliner/css/responsive.css" type="text/css" >
+
+	<script src="/Public/third party/bootstrap/js/bootstrap.min.js"></script>
+
+<link
+	href="/Public/third party/bootstrap/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<link rel="stylesheet" href="/Public/style.css">
+<link rel="stylesheet" href="/Public/third party/timeliner/css/timeliner.css" type="text/css" >
+
+
+<!-- 
+<link rel="stylesheet" href="/Public/third party/Timeline2/assets/css/timeline.css" />
+   
+        <link rel="stylesheet" href="/Public/third party/Timeline2/assets/css/styles.css" />
+        
+      
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Dancing+Script|Antic+Slab" /> -->
+<script>
+$(document).ready(function() {
+			$.timeliner({
+				timelineContainer:'#timeline',
+			});
+			$('.venobox').venobox();
+		});
+</script>
+
+</head>
+<body>
+    <include file="./Public/header.html"/>
+	<div class="container" style="margin-bottom:2em;min-height:100%;">
+		<div class="detail-title">{$projectdiscussed.title}</div>
+		<div class="row">
+			<ul class="nav nav-pills nav-justified single-project-nav">
+				<li class="col-sm-3" role="presentation">
+					<a class="unchoose"  href="{:U('Project/dashboard','id='.$projectdiscussed['id'])}">Dashboard</a>
+				</li>
+				<li class="col-sm-3 active" style="font-weight: bold;color: rgba(245, 253, 250, 0.82);"><a class="singleprojectnavli"
+					href="{:U('Project/timelingarea','projectid='.$projectdiscussed['id'])}">Growth-history board</a>
+				</li>
+				 <li class="col-sm-3"><a class="unchoose"
+					href="{:U('Project/advisorboard','projectid='.$projectdiscussed['id'])}">Advisory board</a>
+				</li>
+				<li class="col-sm-3">
+						<a  class="unchoose" href="{:U('Project/discussarea','projectid='.$projectdiscussed['id'])}">Discussion board</a>
+				</li>
+				
+			</ul>
+		</div>
+
+
+
+       <div id="timeline" class="timeline-container">
+
+			<button class="timeline-toggle">+ expand all</button>
+
+			<br class="clear">
+
+		
+  <foreach name='createdate' key="sta" item='vo'>
+			<div class="timeline-wrapper">
+				<h2 class="timeline-time"><span>{$vo}</span></h2>			
+				<dl class="timeline-series">
+					<span class="tick tick-before"></span>
+					<dt id="{$key}" class="timeline-event"><a>{$sta} </a></dt>
+					<span class="tick tick-after"></span>
+
+					<dd class="timeline-event-content" id="singularityEX">
+                        <div class="media" style="width:110px;margin:10px;">
+				         <if condition="( $sta eq Birthday)"><img src="/Public/image/Idea.png" alt=""></if>
+                         <if condition="( $sta eq ToEgg)"><img src="/Public/image/Egg.png" alt=""></if>
+                         <if condition="( $sta eq ToEaglet)"><img src="/Public/image/Eaglet.png" alt=""></if>
+                         <if condition="( $sta eq ToEagle)"><img src="/Public/image/Eagle.png" alt=""></if>
+
+						</div> 
+						<foreach name="summaryList"  item='so'  key="num">
+							<eq name="so.des" value="$sta">	
+							     	<eq name="so.editorname" value="owner">		
+                                          <div class="event-sub">
+		                                 <h4><span>Edited on
+		                                 	<i class="timeline-sub-time">{$so.time}</i>
+		                                 	 </span></h4>
+		                                 <p>{$so.summary}</p>
+								         </div>	
+                                    <else/>
+   
+							        	 <div class="event-advisor-sub  ">
+		                                 <h4><span> {$so.editorname} Commented on<i class="timeline-sub-time"  style="background: #FFA85F;"> {$so.time}
+		                                 </i></span></h4>
+		                                 <p>{$so.summary}</p>
+								         </div>	
+                                      </eq>
+  
+                          </eq>
+					</foreach>                      
+					</dd>
+
+
+				</dl>
+			</div>
+</foreach>
+			<button class="timeline-toggle">+ expand all</button>
+
+			<br class="clear">
+
+		</div>
+
+    </div>
+
+
+
+    <include file="./Public/foot.html" />
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<link href="/Public/third party/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<script src="/Public/third party/jquery/jquery-2.1.4.min.js"></script>
+	<script src="/Public/third party/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/Public/third party/selectize/dist/js/standalone/selectize.min.js"></script>
+        <link rel="stylesheet" href="/Public/third party/selectize/dist/css/selectize.css">
+		<link rel="stylesheet" href="/Public/third party/selectize/dist/css/selectize.bootstrap3.css">
+		<link rel="stylesheet" href="/Public/third party/selectize/dist/css/selectize.default.css">
+
+		<!--[if IE 8]><script src="js/es5.js"></script><![endif]-->
+
+
+
+
+	<link rel="stylesheet" href="/Public/third party/raty-2.7.0/lib/jquery.raty.css">
+	<link rel="stylesheet" href="/Public/third party/bootstrap-fileinput-master/css/fileinput.min.css">
+	<link rel="stylesheet" href="/Public/style.css">
+	<link rel="stylesheet" href="/Public/video-js/video-js.css">
+	<script src="/Public/video-js/video.js"></script>
+	<script  src="/Public/third party/raty-2.7.0/lib/jquery.raty.js"></script>
+</head>
+<body>
+	<include file="./Public/header.html" />
+	<div class="container">
+		<!-- innovation project short description, dashboard and discuss navigation -->
+		<div class="detail-title">{$projecttodisplay->title}</div>
+		<div class="row">
+			<ul class="nav nav-pills nav-justified single-project-nav">
+				<li class="col-sm-3 active" role="presentation" style="font-weight: bold;color: rgba(245, 253, 250, 0.82);"><a
+					class="singleprojectnavli"
+					href="{:U('Project/dashboard','id='.$projecttodisplay->id)}">Dashboard</a>
+				</li>
+                <li class="col-sm-3"><a class="unchoose"
+					href="{:U('Project/timelingarea','projectid='.$projecttodisplay->id)}">Growth-history board</a>
+				</li>
+
+				<li class="col-sm-3"><a class="unchoose"
+					href="{:U('Project/advisorboard','projectid='.$projecttodisplay->id)}">Advisory board</a>
+				</li>
+				<li class="col-sm-3"><a class="unchoose"
+					href="{:U('Project/discussarea','projectid='.$projecttodisplay->id)}">Discussion board</a>
+				</li>
+			</ul>
+		</div>
+		<!-- Detail info including left side(owner, statics info) and right side(screen shot, basic info and team) -->
+		<div class="single-detail-page">
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="panel panel-default">
+						<div class="panel-heading dashboardinfo-pannel-header">Owner</div>
+						<div class="panel-body">
+							<div class="col-sm-offset-2 col-sm-8">
+								<img src={$projecttodisplay->photolink} alt="no photo"/>
+								<br/>
+								<a href={$projecttodisplay->ldaplink}>{$projecttodisplay->name}</a>
+							</div>
+							<div class="col-sm-12">
+								<eq name="isowner" value="true">
+									<div>
+										<a class="btn" role="button" href="#add-new-member"	data-toggle="modal">
+											<img class="team-build-img" src="/Public/image/invite.png" />
+										</a>
+									</div>
+								</eq>
+							</div>
+						</div>
+					</div>
+					<div class=" add-love row ">
+						<div class="col-xs-4 ">I</div>
+            <if condition="($projecttodisplay:isFavorite eq true)">
+				    	<div id="love" class="col-xs-4 loved "></div>
+						<else/>
+				    	<div id="love" class="col-xs-4 wait-for-love "></div>
+						</if>
+					  <div class="col-xs-4">it !</div>
+					</div>
+					<div class="col-md-12">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<div class="row">
+									<div class="col-xs-6"  >
+										<i class="fa fa-tasks fa-5x"></i>
+									</div>
+									<div class="col-xs-6 text-right">
+										<div id="love-count" class="huge">{$favoritecount}</div>
+										<div>Followers!</div>
+									</div>
+								</div>
+							</div>
+							<a href="#">
+								<div class="panel-footer">
+									<span class="pull-left"><a role="button"   href="#show-supporters" data-toggle="modal">View Details</a></span>
+									<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+									<div class="clearfix"></div>
+								</div>
+							</a>
+						</div>
+					</div>
+					<div class="col-sm-12">
+						<div class="panel panel-red ">
+							<div class="panel-heading">
+								<div class="row">
+									<div class="col-xs-3">
+										<i class="fa fa-comments fa-5x"></i>
+									</div>
+									<div class="col-xs-9 text-right">
+										<div class="huge" id="comment-count">{$adminpostcount}</div>
+										<div>Comments!</div>
+									</div>
+								</div>
+							</div>
+							<a href="{:U('Project/advisorboard','projectid='.$projecttodisplay->id)}">
+								<div class="panel-footer">
+									<span class="pull-left">View Details</span>
+									<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+									<div class="clearfix"></div>
+								</div>
+							</a>
+						</div>
+					</div>
+					<div class="col-md-12">
+							<div class="panel panel-green">
+								<div class="panel-heading">
+									<div class="row">
+										<div class="col-xs-3">
+											<i class="fa fa-support fa-5x"></i>
+										</div>
+										<div class="col-xs-9 text-right">
+											<div class="huge" id="discussr-count">{$postcount}</div>
+											<div>Discussions!</div>
+										</div>
+									</div>
+								</div>
+								<a href="{:U('Project/discussarea','projectid='.$projecttodisplay->id)}">
+									<div class="panel-footer">
+										<span class="pull-left">View Details</span>
+										<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+										<div class="clearfix"></div>
+									</div>
+								</a>
+							</div>
+					</div>
+					<div class="col-md-12">
+						<div class="panel panel-default">
+							<div class="panel-heading dashboardinfo-pannel-header">Advisory Tag</div>
+							<div class="panel-body" style="text-align:left;">
+								<div class="col-sm-12">
+									<div class="demo">
+										<div class="control-group col-sm-12" style="padding:0;">
+											<eq name="isAdvisor" value="true"><label for="select-tags">Choose tags (max 5):</label>
+												<else/><label for="show-tags"> Tags :</label>
+											</eq>
+											<div style="padding:0;">
+												<div class="col-sm-10" style="padding-left:0;padding-right:10px;">
+													<eq name="isAdvisor" value="true">
+														<select id="select-tags" name="tag[]" multiple class="demo-default"  placeholder="Select a tag..." >
+															<option value="">Select a tag...</option>
+															<foreach name='taglist' item='so'>
+																<option value='{$so.tagname}' selected="selected">{$so.tagname}</option>
+															</foreach>
+															<eq name="isAdvisor" value="true">
+															<foreach name='advisortaglist' item='vo'>
+																<option value='{$vo.name}'>{$vo.name}</option>
+															</foreach>
+													    </eq>
+														</select>
+	                        <else/>
+	                          <select id="show-tags" name="tag[]" multiple class="demo-default"  >
+															<foreach name='taglist' item='so'>
+																<option value='{$so.tagname}' selected="selected">{$so.tagname}</option>
+															</foreach>
+														</select>
+                        	</eq>
+												</div>
+												 <eq name="isAdvisor" value="true">
+												<div class="col-sm-2" style="padding:0;">
+													<button class="btn btn-default" id="savetag">Save</button>
+												</div></eq>
+											</div>
+										</div>
+									</div>
+									 <eq name="isAdvisor" value="true">
+									<div style="text-align: right; visibility:visible;">
+										<a id="needadd">There isn't the tag I want...</a>
+									</div>
+								</eq>
+								</div>
+								<div class="col-sm-12" id="advisor-addtag"  style="visibility:hidden;">
+									<div class="demo">
+										<div class="control-group col-sm-12" style="padding:0;">
+											<label for="input-tags">Add tag:</label>
+											<div style="padding:0;">
+												<div class="col-sm-10" style="padding-left:0;padding-right:10px;">
+													<input type="text" id="input-tags" class="demo-default" name="newtag" placeholder="Add a tag...">
+												</div>
+												<div class="col-sm-2" style="padding:0;">
+													<button class="btn btn-default" id="addtag" >Add</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- right side -->
+				<div class="col-sm-9">
+					<div>
+						<span id="team-id" class="hidden-notdisplay">{$projecttodisplay->teamid}</span>
+						<span id="project-id" class="hidden-notdisplay">{$projecttodisplay->id}</span>
+						<span id="is-Admin-Group" class="hidden-notdisplay">{$Think.session.isAdmin}</span>
+						<span id="is-Advisor-Group" class="hidden-notdisplay">{$Think.session.isAdvisor}</span>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading dashboardinfo-pannel-header">
+							Description
+							<eq name="isowner" value="true">
+								<button class="btn btn-default"  id="edit-descritpion">Edit</button>
+								<a role="button" href="#confirm-editsendmail" data-toggle="modal">
+									 <button class="btn btn-default"  id="confirm-send">Send Email</button>
+							  </a>
+								<a style="float:right;"   href="{:U('Project/deleteProject','projectId='.$projecttodisplay->id)}">
+									<button class="btn btn-danger btn-sm"  id="delete-descritpion">delete</button>
+								</a>
+							<else/>
+								<eq name="isAdmin" value="true">
+									<button class="btn btn-default"  id="edit-descritpion">Edit</button>
+									<a role="button" href="#confirm-editsendmail" data-toggle="modal">
+										 <button class="btn btn-default"  id="confirm-send">Send Email</button>
+									</a>
+									<a style="float:right;"   href="{:U('Project/deleteProject','projectId='.$projecttodisplay->id)}">
+										<button class="btn btn-danger btn-sm"  id="delete-descritpion">delete</button>
+									</a>
+								<else/>
+								</eq>
+							</eq>
+						</div>
+						<div class="panel-body">
+							<div class="row ">
+								<if condition="($projecttodisplay:screenshotvideo eq null) AND ($projecttodisplay:screenshotimage eq null)">
+									<h3>Please upload your poster and video!</h3><br/>
+									<a class="thumbnail col-sm-offset-3 col-sm-6" style="border-width: 0; display: none;">
+										<img id="screenshot-image" src={$projecttodisplay:screenshotimage} alt="No screenshot" />
+								  </a>
+								<else />
+									<div class="thumbnail col-sm-offset-3 col-sm-6">
+                    <if condition="($projecttodisplay:screenshotvideo neq null)">
+											<video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="640" height="264" poster={$projecttodisplay:screenshotimage} data-setup="{}">
+												<source src={$projecttodisplay:screenshotvideo} type='video/mp4' />
+												<source src={$projecttodisplay:screenshotvideo} type='video/webm' />
+												<source src={$projecttodisplay:screenshotvideo} type='video/ogg' />
+											</video>
+										<else/>
+                    	<img style="width:auto;height:auto;border-radius:0;max-width:640px;height:264px;" src="{$projecttodisplay:screenshotimage}">
+                    </if>
+									</div>
+								</if>
+							 	<eq name="isowner" value="true">
+									<form id="upload-screenshot-form" class="col-sm-offset-3 col-sm-6 " action="{:U('Project/uploadImage','projectId='.$projecttodisplay->id)}" enctype="multipart/form-data" method="post">
+										<div class="row form-group">
+											<input name="image-path-input" multiple="true" id="image-path" type="file" title="Choose new video" />
+										</div>
+										<div id="errorBlock" class="help-block">Support 'GIF','JPG','PNG','JPEG','MP4','MOV','AVI'</div>
+									</form>
+							  </eq>
+							</div>
+							<div class="row">
+              	<table class="table col-sm-12" id="descritpin-table" style="word-break: break-word;">
+									<tr class="trconfig">
+										<td class="col-sm-3">Title:</td>
+										<td class="col-sm-9 " >
+	                  	<div id="title-div">{$projecttodisplay->title}</div>
+										</td>
+									</tr>
+									<tr class="trconfig">
+										<td class="col-sm-3">Project status:</td>
+										<td class="col-sm-9" id="status-td">
+											<div class="row">
+												<div class="col-sm-2" id="status-text">{$projecttodisplay->status}</div>
+											</div>
+										</td>
+									</tr>
+									<tr class="trconfig">
+										<td class="col-sm-3">Innovation Factor:</td>
+										<td class="col-sm-9">
+			              	<div class="column" >
+			          				<div id="ms" class="maturity_score"  data-rating="{$projecttodisplay->maturityscore} ">
+							          	<input type="hidden" name="score" value="{$projecttodisplay->maturityscore} " readonly="readonly"/>
+							          </div>
+			                  <div id="edit_maturity_score" style="display:none;" >
+			                  	<div id="editmaturityscore_div" data-rating="{$projecttodisplay->maturityscore}" style="margin-left:20px;margin-bottom:5px;"></div>
+								          <input id="editmaturityscore" name="editmaturityscore" style="visibility:hidden;"></input>
+							          </div>
+												<div class="description-div" id="background-div">{$projecttodisplay->background}</div>
+			                </div>
+			           		</td>
+									</tr>
+									<tr class="trconfig">
+										<td class="col-sm-3">Solution Maturity:</td>
+										<td class="col-sm-9">
+	                  	<div class="column" >
+	                    	<div id="is" class="innovation_score"  data-rating="{$projecttodisplay->innovationscore} ">
+						            	<input type="hidden" name="score" value="{$projecttodisplay->innovationscore} " readonly="readonly"/>
+						            </div>
+	                      <div id="edit_innovation_score" style="display:none;" >
+	                      	<div id="editinnovationscore_div" data-rating="{$projecttodisplay->innovationscore} " style="margin-left:20px;margin-bottom:5px;"></div>
+							            <input id="editinnovationscore" name="editinnovationscore" style="visibility:hidden;"></input>
+						            </div>
+												<div  class="description-div" id="solution-div">{$projecttodisplay->idea}</div>
+											</div>
+										</td>
+									</tr>
+									<tr class="trconfig">
+										<td class="col-sm-3">Business Value:</td>
+										<td class="col-sm-9">
+				            	<div class="column" >
+		                  	<div id="bs" class="business_score"  data-rating="{$projecttodisplay->businessscore} ">
+							          	<input type="hidden" name="score" value="{$projecttodisplay->businessscore} " readonly="readonly"/>
+							          </div>
+		                    <div id="edit_business_score" style="display:none;" >
+		                    	<div id="editbusinessscore_div" data-rating="{$projecttodisplay->businessscore} " style="margin-left:20px;margin-bottom:5px;"></div>
+								          <input id="editbusinessscore" name="editbusinessscore" style="visibility:hidden;"></input>
+							          </div>
+						            <div class="description-div" id="benifit-div">{$projecttodisplay->benefit}</div>
+						          </div>
+						        </td>
+									</tr>
+									<tr class="trconfig">
+										<td class="col-sm-3">Repository link:</td>
+										<td class="col-sm-9">
+										 	<a href="{$projecttodisplay->link}"  target="_blank" class="col-sm-12 description-div" id="repository-link" >{$projecttodisplay:link}</a>
+										</td>
+									</tr>
+									<tr class="trconfig">
+										<td class="col-sm-3">Slogan:</td>
+										<td class="col-sm-9">
+											<div class="description-div" id="slogan-div">{$projecttodisplay->slogan}</div>
+										</td>
+									</tr>
+									<tr class="trconfig">
+										<td class="col-sm-3">Attach file:</td>
+										<td class="col-sm-9" id="attachfile-td">
+											<foreach name='attachedfilelist' item='vo'>
+												<div id="file-list">
+				                  <a href="{$vo.attachedfilepath}" class="showfile" style="visibility:visible;">{$vo.originalfilename}</a>
+													<eq name="isowner" value="true">
+														<a href="{:U('Project/deleteattachedfile',array('projectId'=>$projecttodisplay->id, 'filename'=>$vo['originalfilename']))}">
+															<button class="btn btn-sm btn-default" id="delete-file">delete</button>
+														</a>
+													<else/>
+														<eq name="isAdmin" value="true">
+															<a href="{:U('Project/deleteattachedfile',array('projectId'=>$projecttodisplay->id, 'filename'=>$vo['originalfilename']))}">
+																<button class="btn btn-sm btn-default" id="delete-file">delete</button>
+															</a>
+														<else/>
+														</eq>
+													</eq>
+												</div>
+												<br/>
+											</foreach>
+											<p id="existfilecount" style="display:none;visibility:visible;">{$existfilecount}</p>
+											<eq name="isowner" value="true">
+												<form id="upload-file-form" action="{:U('Project/uploadFile','projectId='.$projecttodisplay->id)}" method="post" enctype="multipart/form-data" style="visibility:hidden;">
+													<div class="row form-group">
+														<a href="javascript:" class="a-upload"><input name="attachfile[]" class="upload-file-input" id="files" type="file" multiple style="width:100%;font-size:20px;" />Choose Files
+                                                        </a>
+                                                         <input type="hidden" name="originator" value="{$dashboardcode}"></input>
+														<button id="upload-file-button"  class="btn  btn-default" type="submit" form="upload-file-form" >Upload</button>
+													</div>
+													<span class="warning uploadwarning" style="visibility:hidden;font-size:13px;">* Note: You can ONLY UPLOAD 3 FILES!</br>* Support: 'zipx', 'zip', 'doc', 'docx','ppt','pptx','txt', 'jpg', 'jpeg','gif','png', 'pdf','xlsx', '.xls'</span>
+													</br>
+													<pre id="filelist" style="display:none;width: 650px;"></pre>
+												</form>
+											<else />
+											</eq>
+										</td>
+									</tr>
+	                <tr class="trconfig">
+										<td class="col-sm-3"></td>
+										<td class="col-sm-9">
+											<div style="margin-left:150px;">
+												<button class="btn btn-default" id="save-edited-description-btn" style="visibility:hidden;"> Save </button>
+												&nbsp&nbsp&nbsp
+												<button class="btn btn-default" id="cancel-edit-btn" style="visibility:hidden;">Cancel</button>
+											</div>
+										</td>
+									</tr>
+								</table>
+						  </div>
+						</div>
+					</div>
+					<div class="panel panel-default ">
+						<div class="panel-heading dashboardinfo-pannel-header">Team Members</div>
+						<div class="panel-body">
+							<div id="member-list">
+								<foreach name='memberlist' item='vo'>
+									<div class="member">
+										<img src={$vo.photolink} alt="no photo" />
+										<div><a href={$vo.ldaplink}>{$vo.name}</a></div>
+									</div>
+								</foreach>
+							</div>
+							<neq name="isowner" value="true">
+								<div>
+									<a class="btn" role="button"
+									href="mailto:{$projecttodisplay->email}?subject=Join%20team%20application&body=Please%20add%20me%20to%20Project:%20{$projecttodisplay->title}%20team"
+									style="background-image: url('/Public/image/Join-green.png'); width: 210px; height: 40px; margin-top: 20px;"></a>
+								</div>
+							</neq>
+						</div>
+					</div>
+          <div class="panel panel-default ">
+          	<div class="panel-heading dashboardinfo-pannel-header">Relevant Link
+            	<eq name="isAdmin" value="true">
+              	<a role="button" href="#add-relatedlink" data-toggle="modal">
+              		<button class="btn btn-default"  id="edit-link">Add Link</button>
+             		</a>
+							<else/>
+								<eq name="isAdvisor" value="true">
+									<a role="button" href="#add-relatedlink" data-toggle="modal">
+										<button class="btn btn-default"  id="edit-link">Add Link</button>
+									</a>
+								<else/>
+								</eq>
+							</eq>
+						</div>
+            <div class="panel-body row ">
+            	<foreach name="linklist" item="vo">
+              	<div class="link-container col-sm-11.5 row">
+                	<table class="table" style="margin-bottom:5px;">
+                  	<tr>
+                    	<td class="col-sm-8 " style="text-align:left;">
+												<a href="{:U('Project/dashboard','id='.$vo['linkid'])}"><strong>{$vo.linkedtitle}</strong></a>
+											</td>
+                      <td class="col-sm-2" ><strong>{$vo.linkedowner}</strong></td>
+                      <td class="col-sm-1">{$vo.linkedstatus}</td>
+                    </tr>
+                  </table>
+                </div>
+              </foreach>
+            </div>
+          </div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="add-new-member" tabindex="-1" role="dialog"	aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel" style="font-size: 25px;">Invite people to join</h4>
+				</div>
+				<div class="modal-body">
+					<div class="input-group input-group-lg">
+						<span class="input-group-addon" id="sizing-addon1" style="font-size: 25px;">Alias:</span>
+						<input type="text" id="new-member-name" class="form-control" placeholder="User name"
+							aria-describedby="sizing-addon1" style="font-size: 25px;">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal"
+						id="add-new-member-submit" style="font-size: 25px;">Submit</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						style="font-size: 25px;">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="show-supporters"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    	<div class="modal-content">
+      	<div class="modal-header">
+	      	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title"style="font-size: 25px;">Supporters</h4>
+	      </div>
+        <div class="modal-body">
+        	<foreach name='lovelist' item='vo'>
+		      	<div class="member">
+							<img src={$vo.photolink} alt="no photo" />
+							<div><a href={$vo.ldaplink}>{$vo.username}</a></div>
+						</div>
+		      </foreach>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="add-relatedlink"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog2">
+  		<div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title"style="font-size: 25px;">Add Relevant Link</h4>
+	      </div>
+        <div class="modal-body">
+          <select id="chooselink"style="width:500;">
+          	<option  value="choose project" selected>choose project</option>
+            <foreach name='projectlist' item='vo'>
+		          <option  value="{$vo.id}" >{$vo.title}</option>
+		        </foreach>
+          </select>
+        </div>
+        <div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal"
+						id="add-relatedlink-submit" style="font-size: 25px;">Add</button>
+		 		</div>
+      </div>
+    </div>
+	</div>
+
+	<div class="modal fade" id="confirm-editsendmail"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" style="font-size: 25px;"><b>Confirmation</b></h4>
+		    </div>
+	      <div class="modal-body">
+					<p>Do you really want to send a email to all the advisors and team members?</p>
+	      	<div>
+						<form style="display:inline;" id="sendmail-form" action="{:U('Project/editsendmail','projectId='.$projecttodisplay->id)}" method="post">
+							<button style="color:red;" class="btn btn-default"  id="edit-sendmail" >Send Mail</button>
+						</form>
+						<button style="display:inline;" type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancel</button>
+					</div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+	<div class="modal fade" id="add-edit-summary"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" style="font-size: 25px;"><b>Add Edit Summary</b></h4>
+				</div>
+				<div class="modal-body">
+					<p>Please summarize your edit, this will be used in the Growth Board.</p>
+					<form style="margin-bottom: 0;" id="edit-summary-form" method="post" action="{:U('Project/addeditsummary','projectid='.$projecttodisplay->id)}">
+						<div>
+							<div style="overflow: hidden;">
+								<input type="hidden" name="originator" value="{$dashboardcode}"></input>
+								<textarea  id="editsummary" name="content" class="ckeditor col-sm-12 new-comment-textarea"></textarea>
+							</div>
+							<p style="font-size:12px;">* If you don't want to add summary, just cancel it.</p>
+							<div style="margin:auto auto; width:135px;margin-top:10px;">
+								<button class="btn btn-default" id="edit-summary" type="submit">Save</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancel</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<include file="./Public/foot.html" />
+	<script src="/Public/dashboard.js"></script>
+	<script src="/Public/third party/bootstrap-fileinput-master/js/fileinput.min.js"></script>
+	<script src="/Public/third party/raty-2.7.0/lib/jquery.raty.js"></script>
+	<script>
+		$(document).ready(function(){
+			$("#needadd").click(function(){
+				$("#needadd").css('visibility','hidden');
+				$("#advisor-addtag").css('visibility','visible');
+			})
+			$('#select-tags').selectize({
+				maxItems: 5,
+				 plugins: ['remove_button']
+			});
+      $('#show-tags').selectize({
+				maxItems: 5
+			});
+			if ( ({$Think.session.isAdvisor}) == false){
+				$('#show-tags')[0].selectize.lock();
+			};
+			$('#input-tags').selectize({
+				persist: false,
+				createOnBlur: true,
+				create: true
+			});
+		})
+		$(document).ready(function(){
+			$('#savetag').on('click',function(){
+				var selected = $('#select-tags').val();
+        var projectId = '{$projecttodisplay->id}';
+        var tagName = null;
+				var url = '/Home/Project/addAdvisorTagsToProject/';
+	      setTimeout(function(){
+					$('#savetag').attr('disabled','disabled');
+			  },1000);
+				if(selected==null){selected='0';}
+					 tagName = selected.toString(",");
+				$.post(url,{tagName:tagName, projectId:projectId}, function(data){
+					if(data.errno !== 0 && data.errno !== 1)
+					{
+						exit(data.errmsg);
+					}
+				}, 'json');
+				var userAgent = '';
+				if(/MSIE/i['test'](navigator['userAgent'])==true||/rv/i['test'](navigator['userAgent'])==true||/Edge/i['test'](navigator['userAgent'])==true){
+					userAgent='ie';
+					alert(" Operation succeeds!");
+				} else {
+					userAgent='other';
+				}
+				window.location.reload(true);
+				return;						  
+			});
+      $('#addtag').on('click',function(){
+				var selected = $('#input-tags').val();
+				// var selected=selectedd.split(",");
+				var projectId = '{$projecttodisplay->id}';
+				var url = '/Home/Project/addnewAdvisorTagsToProject/';
+				var tagName = selected;
+				$.post(url,{tagName:tagName, projectId:projectId}, function(data){
+					if(data.errno !== 0 && data.errno !== 1)
+					{
+						exit(data.errmsg);
+					}
+				}, 'json');
+
+    	  var userAgent = '';
+			  if(/MSIE/i['test'](navigator['userAgent'])==true||/rv/i['test'](navigator['userAgent'])==true||/Edge/i['test'](navigator['userAgent'])==true){
+					userAgent='ie';
+					alert(" Operation succeeds!");
+				} else {
+					userAgent='other';
+				}
+				window.location.reload(true);
+				return;
+			})
+		})
+	</script>
+
+	<script>
+ 		$.fn.raty.defaults.path = '/../../../Public/third party/raty-2.7.0/lib/images';
+ 		videojs.options.flash.swf = "video-js.swf";
+ 		$(document).ready(function(){
+	    // $.ajaxSetup ({
+	    //     cache: false //close AJAX cache
+	    //       });
+ 			$("#love").click(function(){
+	    	var userAlias = '{$Think.session.currentalias}';
+				var projectId = '{$projecttodisplay->id}';
+	    	var date = new Date($.now());;
+	    	var lovecount = $("#love-count").text();
+	    	var a=$("#love").attr('class') ;
+	    	if( a.indexOf('wait-for-love') >= 0) {
+	      	$("#love").toggleClass('wait-for-love');
+	      	$("#love").attr('class','loved col-xs-4 ')
+	      	$("#love-count").text(parseInt(lovecount)+1);
+	      	// var updateCell = $("#love");
+	      	var url = '/Home/Project/addFavorite/';
+					$.post(url,{userAlias:userAlias, projectId:projectId},  function(data){
+						if(data.errno !== 0 && data.errno !== 1)
+						{
+					    exit(data.errmsg);
+						}
+					}, 'json');
+	    	}
+	    	else {
+	 				$("#love").toggleClass('loved');
+					$("#love").attr('class','wait-for-love col-xs-4 ')
+					$("#love-count").text(parseInt(lovecount)-1);
+					var url = '/Home/Project/deleteFavorite/';
+					$.post(url, {userAlias:userAlias, projectId:projectId}, function(data){
+						if(data.errno !== 0 && data.errno !== 1)
+						{
+							exit(data.errmsg);
+						}
+					},'json');
+	      }
+
+               		  var userAgent = '';
+    if(/MSIE/i['test'](navigator['userAgent'])==true||/rv/i['test'](navigator['userAgent'])==true||/Edge/i['test'](navigator['userAgent'])==true){
+       userAgent='ie';
+       alert(" Operation succeeds!");
+    } else {
+       userAgent='other';
+    }
+				location.reload(true);
+
+				return;
+	  	});
+
+			$("#image-path").fileinput({showCaption: false});
+
+			$("#files-upload").fileinput({showCaption: false});
+
+
+			$('.maturity_score').raty({
+	   		readOnly: true,
+	   		score: function() {
+	            return $(this).attr('data-rating');}
+	    });
+	 		$('.innovation_score').raty({
+	   		readOnly: true,
+	   		score: function() {
+	            return $(this).attr('data-rating');}
+	    });
+			$('.business_score').raty({
+	   		readOnly: true,
+	   		score: function() {
+	            return $(this).attr('data-rating');}
+	    });
+			$('#editmaturityscore_div').raty({
+				hints: ['1', '2', '3', '4', '5'],
+				//path:"../../../Public/third party/raty-2.7.0//doc/img",
+				//starOff:'medal-off.png',
+				//starOn:'medal-on.png',
+				width:150,
+				cancel:true,
+				target: '#editmaturityscore',
+	      targetKeep : true,
+	      score: function() {
+	      	return $(this).attr('data-rating');}
+			});
+			$('#editinnovationscore_div').raty({
+				hints: ['1', '2', '3', '4', '5'],
+				//path:"../../../Public/third party/raty-2.7.0//doc/img",
+				//starOff:'medal-off.png',
+				//starOn:'medal-on.png',
+				width:150,
+				cancel:true,
+				target: '#editinnovationscore',
+	      targetKeep : true,
+	      score: function() {
+	        return $(this).attr('data-rating');}
+			});
+			$('#editbusinessscore_div').raty({
+				hints: ['1', '2', '3', '4', '5'],
+				//path:"../../../Public/third party/raty-2.7.0//doc/img",
+				//starOff:'medal-off.png',
+				//starOn:'medal-on.png',
+				width:150,
+				cancel:true,
+				target: '#editbusinessscore',
+	      targetKeep : true,
+	      score: function() {
+	        return $(this).attr('data-rating');}
+			});
+	 	})
+	</script>
+	<script>
+ 		document.getElementById('files').addEventListener('change', function(e) {
+    	var list = document.getElementById('filelist');
+    	var existfilecount = $('#existfilecount').text();
+    	list.innerHTML = '';
+    	for (var i=0;i<this.files.length;i++) {
+        list.innerHTML +='&nbsp'+ (i+1) + '. ' + this.files[i].name + '\n';
+    	}
+    	document.getElementById('upload-file-button').removeAttribute("disabled");
+    	var count = parseInt(existfilecount) + this.files.length;
+    	if(count>3){
+    		alert("You can only upload 3 files on total!");
+    		list.style.display = 'none';
+    		document.getElementById('upload-file-button').setAttribute("disabled","disabled");
+    		return;
+    	};
+    	if (list.innerHTML == '') list.style.display = 'none';
+    	else list.style.display = 'block';
+ 		});
+  </script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#delete-descritpion').click(function(){
+				//var confirm = confirm('confirm: You really want to delete this project?');
+				if(confirm('confirm: You really want to delete this project?')){}
+				else{
+					return false;
+				}
+			});
+		});
+	</script>
+	<script type="text/javascript">
+ 		$(document).ready(function(){
+			$('#attachfile-td').on('click','#delete-file',function(){
+				var projectId = '{$projecttodisplay->id}';
+				var filename = $(this).parent().children("a.showfile").text();
+        if(confirm('confirm: You really want to delete this attachement?')){}
+				else{
+					return false;
+				}
+	 		});
+ 		})
+	</script>
+ </body>
+</html>
