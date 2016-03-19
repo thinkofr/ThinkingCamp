@@ -1,0 +1,4 @@
+D:\wamp\bin\mysql\mysql5.6.17\bin\mysqldump.exe --host=localhost -u root -p123 innovationprojectdb > D:\Backup\DB\Backup_%date:~4,2%%date:~7,2%%date:~10,4%.sql
+D:\wamp\bin\mysql\mysql5.6.17\bin\mysqldump.exe --host=localhost -u root -p123 innovationprojectdb > \\163.184.133.6\ie_Microseimic_temp\IE_Microseismic\_NoBackup\BackupforInnovationCamp\Database\Backup_%date:~4,2%%date:~7,2%%date:~10,4%.sql
+XCOPY D:\wamp\www\InnovationCamp\Uploads\* D:\Backup\Uploads\Uploads_%date:~4,2%%date:~7,2%%date:~10,4% /s /i
+XCOPY D:\wamp\www\InnovationCamp\Uploads\* \\163.184.133.6\ie_Microseimic_temp\IE_Microseismic\_NoBackup\BackupforInnovationCamp\Uploads\Uploads_%date:~4,2%%date:~7,2%%date:~10,4% /s /i

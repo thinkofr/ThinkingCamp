@@ -1,0 +1,4 @@
+*.log
+Runtime/Cache/**/*
+Uploads/Image/**/*
+Public/video/**/*
